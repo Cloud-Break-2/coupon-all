@@ -1,0 +1,97 @@
+--- 
+services:
+  coupon-redis:
+    image: redis:7.2-alpine
+    container_name: coupon-redis
+    networks:
+      - coupon-network
+    ports:
+      - "6379"
+    command: redis-server --port 6379
+      
+  coupon-mysql:
+    image: mysql:8.0
+    container_name: coupon-mysql
+    networks:
+      - coupon-network
+    ports:
+      - "3306"
+    environment:
+      MYSQL_DATABASE: coupon
+      MYSQL_USER: abcd
+      MYSQL_PASSWORD: 1234
+      MYSQL_ROOT_PASSWORD: 1234
+      TZ: UTC
+    volumes:
+      - mysql-data:/var/lib/mysql
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --explicit_defaults_for_timestamp=1
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+
+  coupon-api:
+#    image: cloudbreak6th/coupon-api:v1.1
+    image: coupon-api
+    build:
+      context: ./coupon-api
+      dockerfile: Dockerfile
+    container_name: coupon-api
+    networks:
+      - coupon-network
+    ports:
+      - "8080"
+    depends_on:
+      - coupon-mysql
+      - coupon-redis
+    restart: always
+    environment:
+        - SPRING_PROFILES_ACTIVE=docker
+        - SPRING_DATASOURCE_URL=jdbc:mysql://coupon-mysql:3306/coupon
+        - SPRING_DATASOURCE_USERNAME=abcd
+        - SPRING_DATASOURCE_PASSWORD=1234
+        - SPRING_DATA_REDIS_HOST=coupon-redis
+        - SPRING_DATA_REDIS_PORT=6379
+
+  shop-back:
+    image: cloudbreak6th/shop-back:v1.0
+#    image: shop-back
+#    build:
+#      context: ./shop-back
+#      dockerfile: Dockerfile
+    container_name: shop-back
+    networks:
+      - coupon-network
+    ports:
+      - "8080"
+    depends_on:
+      coupon-mysql:
+        condition: service_healthy
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+
+  shop-front:
+    image: cloudbreak6th/shop-front:v1.0
+#    image: shop-front
+#    build:
+#      context: ./shop-front
+#      dockerfile: Dockerfile
+    container_name: shop-front
+    networks:
+      - coupon-network
+    ports:
+      - "80:80"
+    depends_on:
+      - shop-back
+
+networks:
+  coupon-network:
+    driver: bridge
+
+volumes:
+  mysql-data:
+    driver: local
+  mysql-init:
+    driver: local

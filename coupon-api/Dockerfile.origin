@@ -1,0 +1,23 @@
+# 멀티 아키텍처 이미지 빌드를 위한 Dockerfile 작성
+
+# Stage 1 - 빌드 스테이지
+# 빌드 시 사용하는 베이스 이미지 이미지 및 플랫폼 설정
+FROM --platform=$BUILDPLATFORM eclipse-temurin:20-jdk AS builder
+
+# 작업 디렉토리 설정
+WORKDIR /app
+
+# 빌드된 JAR 파일을 스테이지로 복사
+COPY ./coupon-api/build/libs/coupon-api.jar /app/coupon-api.jar
+
+# Stage 2 - 런타임 스테이지
+# 최종 이미지를 위한 베이스 이미지 및 플랫폼 설정
+FROM eclipse-temurin:20-jdk
+
+# 빌드된 JAR 파일을 런타임 스테이지로 복사
+COPY --from=builder /app/coupon-api.jar /app/coupon-api.jar
+
+# JAR 파일 실행
+
+# 컨테이너가 실행될 때 기본적으로 사용할 포트 설정
+EXPOSE 8080

@@ -1,0 +1,122 @@
+{
+	"info": {
+		"_postman_id": "6adb4b6b-e99d-44b7-90bd-b4850d7ce77b",
+		"name": "네고왕쿠폰발급",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "20752080"
+	},
+	"item": [
+		{
+			"name": "[쿠폰발급 백엔드로 직접요청] 쿠폰발급 V1 - 유저 연동(유저당 1개로 제한)",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"userId\": 3,\n    \"couponId\": 1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/v1/issue",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"issue"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[쿠폰발급 백엔드로 직접요청] 쿠폰발급 V2 - 유저 제한 없음",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"userId\": 3,\n    \"couponId\": 1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/v2/issue",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v2",
+						"issue"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[카카오숍 백엔드로 요청] 쿠폰발급 V1 - 유저 연동(유저당 1개로 제한)",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"userId\": 1,\n    \"couponId\": 1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8082/coupon/v1",
+					"host": [
+						"localhost"
+					],
+					"port": "8082",
+					"path": [
+						"coupon",
+						"v1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[카카오숍 백엔드로 요청] 쿠폰발급 V2 - 유저 제한 없음",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"userId\": 1,\n    \"couponId\": 1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8082/coupon/v2",
+					"host": [
+						"localhost"
+					],
+					"port": "8082",
+					"path": [
+						"coupon",
+						"v2"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
